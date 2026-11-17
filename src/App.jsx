@@ -21,12 +21,13 @@ function App() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const controller = new AbortController()
     async function getBusinesses() {
       const query = '[out:json];nwr["amenity"="cafe"](around:1000,51.3614,-0.1506);out center;'
       const url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query)
 
       try {
-        const response = await fetch(url)
+        const response = await fetch(url, { signal:controller.signal })
 
         if (!response.ok) {
           throw new Error("Couldn't load businesses. The map server might be busy, so try again in a minute.")
@@ -36,26 +37,33 @@ function App() {
         const cleaned = data.elements.map(cleanBusiness)
         setBusinesses(cleaned)
       } catch (err) {
+        if (controller.signal.aborted) return
         setError(err.message)
       } finally {
-        setLoading(false)
+        if (!controller.signal.aborted) setLoading(false)
       }
     }
     getBusinesses()
+    return () => controller.abort()
   }, [])
 
   return (
     <main>
       <h1>Prospect Finder</h1>
       {loading && <p>Loading businesses...</p>}
-      <p>{businesses.length} results</p>
-      <ul>
-        {businesses.map(business => (
-          <li key={business.id}>
-            <strong>{business.name}</strong> {business.street}
-          </li>
-        ))}
-      </ul>
+      {error && <p>{error}</p>}
+      {!loading && !error && (
+        <>
+          <p>{businesses.length} results</p>
+          <ul>
+            {businesses.map(business => (
+              <li key={business.id}>
+                <strong>{business.name}</strong> {business.street}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </main>
   )
 }
