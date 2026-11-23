@@ -71,20 +71,34 @@ function App() {
     return () => controller.abort()
   }, [areaName, typeLabel])
 
-function handleAreaChange(newArea) {
-  setAreaName(newArea)
-  setLoading(true)
-  setError('')
-}
+  function handleAreaChange(newArea) {
+    setAreaName(newArea)
+    setLoading(true)
+    setError('')
+  }
+
+  function handleTypeChange(newType) {
+    setTypeLabel(newType)
+    setLoading(true)
+    setError('')
+  }
 
   return (
     <main>
       <h1>Prospect Finder</h1>
       <label>
         Area
-        <select area={areaName} onChange={event => handleAreaChange(event.target.value)}>
+        <select value={areaName} onChange={event => handleAreaChange(event.target.value)}>
           {areas.map(area => (
             <option key={area.name} value={area.name}>{area.name}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Type
+        <select value={typeLabel} onChange={event => handleTypeChange(event.target.value)}>
+          {types.map(type => (
+            <option key={type.label} value={type.label}>{type.label}</option>
           ))}
         </select>
       </label>
