@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
-import SearchPage from '.SearchPage.jsx'
+import SearchPage from './SearchPage.jsx'
 import BusinessPage from './BusinessPage.jsx'
 
-function App () {
+function App() {
     return (
         <BrowserRouter>
-        <Routes>
-            <Route path="/business/:osmType/:id" element={<SearchPage />} />
+            <Routes>
+                <Route path="/" element={<SearchPage />} />
+                <Route path="/business/:osmType/:id" element={<SearchPage />} />
             </Routes>
-            </BrowserRouter>
+        </BrowserRouter>
     )
 }
 
