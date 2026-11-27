@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useParams, useNavigate } from 'react-router'
 import cleanBusiness from './cleanBusiness.js'
 
 function BusinessPage() {
@@ -40,9 +40,11 @@ function BusinessPage() {
         getBusiness()
         return () => controller.abort()
     }, [osmType, id])
+    const navigate = useNavigate()
 
     return (
         <main>
+            <button onClick={() => navigate(-1)}>Back to results</button>
             <h1>Business page</h1>
 
             {loading && <p>Loading business...</p>}
@@ -56,6 +58,7 @@ function BusinessPage() {
                 <p>Phone: {business.phone || 'Not listed'}</p>
                 <p>Hours: {business.hours || 'Not listed'}</p>
                 <p>Website: {business.website || 'Not listed'}</p>
+                <a href={'https://www.openstreetmap.org/' + business.osmType + '/' + business.id} target="_blank" rel="noreferrer">View on map</a>
                 </>
             )}
         </main>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import cleanBusiness from './cleanBusiness.js'
 
 const areas = [
@@ -26,8 +26,9 @@ function SearchPage() {
   const [businesses, setBusinesses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [areaName, setAreaName] = useState('Wallington')
-  const [typeLabel, setTypeLabel] = useState('Cafes')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const areaName = searchParams.get('area') || 'Wallington'
+  const typeLabel = searchParams.get('type') || 'Cafes'
 
   useEffect(() => {
     const selectedArea = areas.find(item => item.name === areaName)
@@ -59,13 +60,13 @@ function SearchPage() {
   }, [areaName, typeLabel])
 
   function handleAreaChange(newArea) {
-    setAreaName(newArea)
+    setSearchParams({ area: newArea, type: typeLable })
     setLoading(true)
     setError('')
   }
 
   function handleTypeChange(newType) {
-    setTypeLabel(newType)
+    setSearchParams({ area: areaName, type: newType })
     setLoading(true)
     setError('')
   }
